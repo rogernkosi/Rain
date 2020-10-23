@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.rogernkosi.rainassessment.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,8 +20,8 @@ import com.rogernkosi.rainassessment.viewmodel.ForecastViewModel;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
     private ForecastViewModel forecastViewModel;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel.class);
         forecastViewModel.init();
-        forecastViewModel.getForecastRepository().observe(this, response -> {
-            Log.e("TAG", response.getForecast().getForecastday().get(0).getHour().get(0).getCondition().toString());
-        });
     }
 
     /**
@@ -54,5 +55,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        forecastViewModel.getForecastRepository(String.valueOf(sydney.latitude).concat(",").concat(String.valueOf(sydney.longitude))).observe(this, response -> {
+            Log.e("TAG", response.toString());
+        });
     }
 }

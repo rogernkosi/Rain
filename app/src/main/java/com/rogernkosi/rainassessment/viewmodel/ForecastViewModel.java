@@ -22,10 +22,10 @@ public class ForecastViewModel extends ViewModel {
             return;
         }
         foreCastRepository = ForeCastRepository.getInstance();
-        mutableLiveData = foreCastRepository.getForecast("23,34");
     }
 
-    public LiveData<Response> getForecastRepository() {
+    public LiveData<Response> getForecastRepository(String location) {
+        mutableLiveData = foreCastRepository.getForecast(location);
         return mutableLiveData;
     }
 
