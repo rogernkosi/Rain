@@ -1,8 +1,10 @@
 package com.rogernkosi.rainassessment;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.rogernkosi.rainassessment.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -11,10 +13,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.rogernkosi.rainassessment.viewmodel.ForecastViewModel;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+
+    private ForecastViewModel forecastViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +29,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel.class);
+        forecastViewModel.init();
+        forecastViewModel.getForecastRepository().observe(this, response -> {
+            Log.e("TAG", response.getForecast().getForecastday().get(0).getHour().get(0).getCondition().toString());
+        });
     }
 
     /**
