@@ -5,7 +5,7 @@ import com.rogernkosi.rainassessment.util.Constants;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-class RetrofitService {
+public class RetrofitService {
     private static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.BASE_URI)
             .addConverterFactory(GsonConverterFactory.create())

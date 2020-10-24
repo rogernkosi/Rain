@@ -1,28 +1,30 @@
-package com.rogernkosi.rainassessment.networking;
+package com.rogernkosi.rainassessment.Repository;
 
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.rogernkosi.rainassessment.model.Response;
+import com.rogernkosi.rainassessment.networking.Api;
+import com.rogernkosi.rainassessment.networking.RetrofitService;
 import com.rogernkosi.rainassessment.util.Constants;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class ForeCastRepository {
-    private static ForeCastRepository repository;
+public class ForecastRepository {
+    private static ForecastRepository repository;
 
-    public static ForeCastRepository getInstance() {
+    public static ForecastRepository getInstance() {
         if (repository == null){
-            repository = new ForeCastRepository();
+            repository = new ForecastRepository();
         }
         return repository;
     }
 
     private Api api;
 
-    public ForeCastRepository(){
+    private ForecastRepository(){
         api = RetrofitService.createService(Api.class);
     }
 
