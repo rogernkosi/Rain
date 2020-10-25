@@ -33,8 +33,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap mMap;
-    private ForecastViewModel forecastViewModel;
-    private FusedLocationProviderClient fusedLocationClient;
+
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 2355;
 
@@ -42,15 +41,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel.class);
-        forecastViewModel.init();
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
@@ -129,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions().position(location).title(latLng.getCityName()));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
             mMap.setOnMarkerClickListener(marker -> {
-                startActivity(WeatherDetailsActivity.getStartIntent(this));
+                startActivity(WeatherDetailsActivity.getStartIntent(this, marker.getPosition()));
                 return false;
             });
         });

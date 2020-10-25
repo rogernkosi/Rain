@@ -63,15 +63,16 @@ public class LocationService extends LifecycleService {
     };
 
     private void getLocation(double lat, double lng){
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        String locality = null;
         try {
-            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             List<Address> fromLocation = geocoder.getFromLocation(lat, lng, MAX_ADDRESS_RESULTS);
-            String locality = fromLocation.get(0).getLocality(); // I will always use the first element in the list since I am getting only 1 result
-            LatitudeLongitude latLng = new LatitudeLongitude(String.valueOf(lat), String.valueOf(lng), locality);
-            latLngMutableLiveData.setValue(latLng);
+            locality = fromLocation.get(0).getLocality(); // I will always use the first element in the list since I am getting only 1 result
         } catch (IOException e) {
             e.printStackTrace();
         }
+        LatitudeLongitude latLng = new LatitudeLongitude(String.valueOf(lat), String.valueOf(lng), locality);
+        latLngMutableLiveData.setValue(latLng);
     }
 
     private void startLocationService(){
@@ -92,6 +93,7 @@ public class LocationService extends LifecycleService {
                 channelId
         );
         builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSound(null);
         builder.setContentTitle(Constants.LOCATION_NOTIFICATION_TITLE);
         builder.setDefaults(NotificationCompat.DEFAULT_ALL);
         builder.setContentText(Constants.LOCATION_NOTIFICATION_TEXT);
