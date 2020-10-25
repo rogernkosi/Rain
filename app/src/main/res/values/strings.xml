@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">RainAssessment</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_weather_details">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment1</string>
+    <string name="loading_weather">Preparing your weather...</string>
+    <string name="not_available">N/A</string>
 </resources>
