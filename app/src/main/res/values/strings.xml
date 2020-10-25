@@ -7,4 +7,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment1</string>
     <string name="loading_weather">Preparing your weather...</string>
+    <string name="not_available">N/A</string>
 </resources>
