@@ -1,9 +1,11 @@
 package com.rogernkosi.rainassessment;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,12 +14,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.rogernkosi.rainassessment.adapters.ForecastRecyclerViewAdapter;
 import com.rogernkosi.rainassessment.model.Hour;
+import com.rogernkosi.rainassessment.persistance.model.PinnedLocation;
 import com.rogernkosi.rainassessment.util.TimeUtils;
 import com.rogernkosi.rainassessment.viewmodel.ForecastViewModel;
 import com.uber.autodispose.AutoDispose;
@@ -27,7 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
-public class WeatherDetailsActivity extends FragmentActivity {
+public class WeatherDetailsActivity extends AppCompatActivity {
 
     public static final String POSITION_EXTRA = "POSITION_EXTRA";
     private ForecastViewModel forecastViewModel;
@@ -35,6 +39,7 @@ public class WeatherDetailsActivity extends FragmentActivity {
     private AppCompatTextView location;
     private AppCompatTextView temperature;
     private AppCompatImageView timeOfDayBackground;
+
     private ProgressDialog progressDialog;
     private RecyclerView forecastRecyclerView;
     private ForecastRecyclerViewAdapter forecastRecyclerViewAdapter;
@@ -48,7 +53,6 @@ public class WeatherDetailsActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_weather_details);
 
         condition = findViewById(R.id.weather_condition);
@@ -56,14 +60,22 @@ public class WeatherDetailsActivity extends FragmentActivity {
         temperature = findViewById(R.id.temperature);
         timeOfDayBackground = findViewById(R.id.time_of_day);
 
+        setupToolBar();
+
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(getString(R.string.loading_weather));
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        forecastViewModel = ViewModelProviders.of(this).get(ForecastViewModel.class);
-        forecastViewModel.init();
+        forecastViewModel = new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(ForecastViewModel.class);
         render();
+    }
+
+    void setupToolBar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private void render() {
@@ -126,6 +138,12 @@ public class WeatherDetailsActivity extends FragmentActivity {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     private void showDayTimeImage(String hours) {
         switch (hours) {
             case "00:00":
@@ -158,7 +176,7 @@ public class WeatherDetailsActivity extends FragmentActivity {
             case "16:00":
             case "17:00":
             case "18:00": {
-                timeOfDayBackground.setImageDrawable(getResources().getDrawable(R.drawable.kids_play_day_time));
+                timeOfDayBackground.setImageDrawable(getResources().getDrawable(R.drawable.kids_play_day_time)); // This image is heavy, I need a better image
             }
             break;
             default:

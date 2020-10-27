@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
@@ -19,7 +20,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import com.rogernkosi.rainassessment.MapsActivity;
+import com.rogernkosi.rainassessment.DisplayMapActivity;
 import com.rogernkosi.rainassessment.R;
 import com.rogernkosi.rainassessment.model.LatitudeLongitude;
 import com.rogernkosi.rainassessment.util.Constants;
@@ -57,6 +58,7 @@ public class LocationService extends LifecycleService {
             if (locationResult != null && locationResult.getLastLocation() != null){
                 double latitude = locationResult.getLastLocation().getLatitude();
                 double longitude = locationResult.getLastLocation().getLongitude();
+                Log.e("locationtest", ""+latitude+""+longitude);
                 getLocation(latitude, longitude);
             }
         }
@@ -79,7 +81,7 @@ public class LocationService extends LifecycleService {
         String channelId = "location_notification_channel";
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        Intent resultIntent = new Intent(this, MapsActivity.class);
+        Intent resultIntent = new Intent(this, DisplayMapActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 getApplicationContext(),

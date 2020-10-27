@@ -2,7 +2,10 @@ package com.rogernkosi.rainassessment.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class TimeUtils {
 
@@ -28,6 +31,11 @@ public class TimeUtils {
             e.printStackTrace();
             return "00:00";
         }
+    }
+
+    public static String getCurrentDateTime(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return simpleDateFormat.format(new Date());
     }
 
 }

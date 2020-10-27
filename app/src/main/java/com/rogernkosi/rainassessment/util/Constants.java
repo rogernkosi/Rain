@@ -12,7 +12,7 @@ public interface Constants {
     CharSequence LOCATION_NOTIFICATION_TEXT = "Current Location being shared";
     CharSequence NOTIFICATION_CHANNEL = "Rain Service";
     String CHANNEL_DESCRIPTION = "This channel is being used by Rain";
-    long LOCATION_INTERVAL = 300000;
-    long FASTEST_LOCATION_INTERVAL = 300000;
+    long LOCATION_INTERVAL = 10000;
+    long FASTEST_LOCATION_INTERVAL = 10000;
     String ACTION_VIEW_CURRENT_LOCATION = "currentLocation";
 }
