@@ -14,7 +14,7 @@ This is a project for tracking a user location and doing readings on the possibl
 * Allow a user to track the strength of all possible data connections for their device
 
 # //TODO
-* Data binding, DI(Dagger 2) and unit testing
+* Data binding, DI(Dagger 2) and unit testing, Fix Circle CI build failures
 
 ## Landing screen 
 
