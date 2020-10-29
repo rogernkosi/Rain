@@ -159,8 +159,8 @@ public class PhoneSignalStrengthService extends Service {
             ((TelephonyManager) getSystemService(TELEPHONY_SERVICE)).listen(signalStrengthListener, SignalStrengthListener.LISTEN_SIGNAL_STRENGTHS);
             TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-            String ltestr = signalStrength.toString();
-            String[] parts = ltestr.split(" ");
+//            String ltestr = signalStrength.toString(); could have used this method but notified after a couple of tests that the array elements are not consistent and could easy cause problems
+//            String[] parts = ltestr.split(" ");
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 @SuppressLint("MissingPermission") List<CellInfo> allCellInfo = tm.getAllCellInfo(); // requires ACCESS_FINE_LOCATION, will be checked in activity.
