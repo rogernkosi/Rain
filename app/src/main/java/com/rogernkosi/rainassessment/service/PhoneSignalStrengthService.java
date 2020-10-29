@@ -104,6 +104,7 @@ public class PhoneSignalStrengthService extends Service {
                             powerModelList.add(new SignalPowerModel(network.getTypeName(),builder.toString()));
                         } else if (type == ConnectivityManager.TYPE_MOBILE) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                                Log.e("sub", network.getSubtypeName());
                                 if (DeviceSignalStrengthRepository.getInstance().getCellInfoGsm() != null) {
                                     CellInfoGsm cellInfoGsm = DeviceSignalStrengthRepository.getInstance().getCellInfoGsm();
                                     int dbm = cellInfoGsm.getCellSignalStrength().getDbm();
