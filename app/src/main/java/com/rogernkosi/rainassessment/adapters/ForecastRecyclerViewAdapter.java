@@ -1,18 +1,12 @@
 package com.rogernkosi.rainassessment.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rogernkosi.rainassessment.R;
@@ -67,11 +61,6 @@ public class ForecastRecyclerViewAdapter extends RecyclerView.Adapter<ForecastRe
         return hourPublishSubject.hide();
     }
 
-    /**
-     * Returns the total number of items in the data set held by the adapter.
-     *
-     * @return The total number of items in this adapter.
-     */
     @Override
     public int getItemCount() {
         return hourList.size();

@@ -3,20 +3,9 @@ package com.rogernkosi.rainassessment;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +14,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -33,19 +21,16 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.rogernkosi.rainassessment.persistance.model.PinnedLocation;
 import com.rogernkosi.rainassessment.service.LocationService;
@@ -55,25 +40,26 @@ import com.rogernkosi.rainassessment.viewmodel.LocationViewModel;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Method;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class DisplayMapActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private static final String TAG = DisplayMapActivity.class.getSimpleName();
     private static final String EXTRA_SHOW_FAVOURITES = "EXTRA_SHOW_FAVOURITES";
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 2355;
+
     private GoogleMap mMap;
     private LocationViewModel locationViewModel;
     private View parentView;
-    private View anchorView;
     private Marker marker;
     private boolean showFavorites;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.anchor_view) View anchorView;
 
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 2355;
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        ButterKnife.bind(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -81,31 +67,11 @@ public class DisplayMapActivity extends AppCompatActivity implements OnMapReadyC
         mapFragment.getMapAsync(this);
 
         parentView = findViewById(android.R.id.content); // root view group
-        anchorView = findViewById(R.id.anchor_view);
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         showFavorites = getIntent().getBooleanExtra(EXTRA_SHOW_FAVOURITES, false);
 
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-        } else {
-            startLocationService();
-        }
-
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
-
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo info = wifiManager.getConnectionInfo();
-        String ssid = info.getSSID();
-        int rssi = info.getRssi();
-
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-
-        for (NetworkInfo network : connectivityManager.getAllNetworkInfo()) {
-            Log.d("Network", "network info: " + network.getType() + " " + network.getSubtypeName());
-        }
+        checkPermissions();
 
         locationViewModel = new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(LocationViewModel.class);
         if (showFavorites) {
@@ -114,13 +80,21 @@ public class DisplayMapActivity extends AppCompatActivity implements OnMapReadyC
         listenEvents();
     }
 
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+        } else {
+            startLocationService();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0) {
             startLocationService();
         } else {
-            Toast.makeText(this, "grant access bro", Toast.LENGTH_SHORT).show();
+            retry();
         }
     }
 
@@ -136,6 +110,11 @@ public class DisplayMapActivity extends AppCompatActivity implements OnMapReadyC
         switch (item.getItemId()) {
             case R.id.show_favorites: {
                 startActivity(DisplayMapActivity.getStartIntent(this, true));
+                return true;
+            }
+            case R.id.device_signal: {
+                startActivity(DeviceSignalStrengthActivity.getStartIntent(this));
+                return true;
             }
             default:
                 return super.onOptionsItemSelected(item);
@@ -164,12 +143,19 @@ public class DisplayMapActivity extends AppCompatActivity implements OnMapReadyC
         return false;
     }
 
+    private void retry() {
+        new AlertDialog.Builder(this, R.style.Theme_AppCompat_DayNight_Dialog_Alert)
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                    checkPermissions();
+                }).setTitle(R.string.grant_permission).create().show();
+    }
+
     private void stopLocationService() {
         if (isLocationServiceRunning()) {
             Intent intent = new Intent(getApplicationContext(), LocationService.class);
             intent.setAction(Constants.STOP_LOCATION_SERVICE);
             startService(intent);
-            Toast.makeText(this, "Location service is stopped", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "We stopped tracking your live location", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -178,11 +164,12 @@ public class DisplayMapActivity extends AppCompatActivity implements OnMapReadyC
             Intent intent = new Intent(getApplicationContext(), LocationService.class);
             intent.setAction(Constants.START_LOCATION_SERVICE);
             startService(intent);
-            Toast.makeText(this, "Location service is started", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "We are tracking your live location", Toast.LENGTH_LONG).show();
         }
     }
 
     private void updateMap(boolean showFavorites) {
+        // No need to go through the ViewModel as Service is an Android component.
         LocationService.latLngMutableLiveData.observe(this, latLng -> {
             if (!showFavorites) {
                 LatLng location = new LatLng(Double.valueOf(latLng.getLat()), Double.valueOf(latLng.getLng()));

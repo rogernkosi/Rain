@@ -1,22 +1,11 @@
 <resources>
-    <string name="app_name">RainAssessment</string>
+    <string name="app_name">Rain</string>
     <string name="title_activity_maps">Location tracker</string>
-    <string name="title_activity_weather_details">Weather forcast</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment1</string>
+    <string name="title_activity_weather_details">Weather forecast</string>
     <string name="loading_weather">Preparing your weather...</string>
     <string name="not_available">N/A</string>
-    <string name="title_activity_main">MainActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_history">History</string>
     <string name="save_location">Save</string>
     <string name="save_location_title">Save location</string>
@@ -26,4 +15,10 @@
     <string name="add_favorites">Add to favorites</string>
     <string name="cancel">Cancel</string>
     <string name="show_favorites">Show favorites</string>
+    <string name="device_signal">Device signal</string>
+    <string name="ok">OK</string>
+    <string name="device_signal_strength">Device Signal Strength</string>
+    <string name="please_fill_in_location_name">Location name</string>
+    <string name="description">Location description</string>
+    <string name="grant_permission">This feature needs location permission, please grant permission</string>
 </resources>
