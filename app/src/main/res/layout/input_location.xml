@@ -6,11 +6,13 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/location_name"
+        android:hint="@string/please_fill_in_location_name"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="@dimen/edit_text_location" />
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/description"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:hint="@string/description"
+        android:layout_height="@dimen/edit_text_location" />
 </LinearLayout>

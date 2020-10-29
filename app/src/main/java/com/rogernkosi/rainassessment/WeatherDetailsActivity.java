@@ -31,18 +31,23 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class WeatherDetailsActivity extends AppCompatActivity {
 
     public static final String POSITION_EXTRA = "POSITION_EXTRA";
     private ForecastViewModel forecastViewModel;
-    private AppCompatTextView condition;
-    private AppCompatTextView location;
-    private AppCompatTextView temperature;
-    private AppCompatImageView timeOfDayBackground;
-
-    private ProgressDialog progressDialog;
-    private RecyclerView forecastRecyclerView;
     private ForecastRecyclerViewAdapter forecastRecyclerViewAdapter;
+    private ProgressDialog progressDialog;
+
+    @BindView(R.id.weather_condition) AppCompatTextView condition;
+    @BindView(R.id.location) AppCompatTextView location;
+    @BindView(R.id.temperature) AppCompatTextView temperature;
+    @BindView(R.id.time_of_day) AppCompatImageView timeOfDayBackground;
+    @BindView(R.id.forecast_list) RecyclerView forecastRecyclerView;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+
 
     public static Intent getStartIntent(Context context, LatLng latLng) {
         Intent intent = new Intent(context, WeatherDetailsActivity.class);
@@ -54,31 +59,27 @@ public class WeatherDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_details);
-
-        condition = findViewById(R.id.weather_condition);
-        location = findViewById(R.id.location);
-        temperature = findViewById(R.id.temperature);
-        timeOfDayBackground = findViewById(R.id.time_of_day);
-
+        ButterKnife.bind(this);
         setupToolBar();
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getString(R.string.loading_weather));
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
         forecastViewModel = new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(ForecastViewModel.class);
         render();
     }
 
     void setupToolBar(){
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
+    private void showProgressDialog(){
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.loading_weather));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
     private void render() {
+        showProgressDialog();
         if (getIntent().hasExtra(POSITION_EXTRA)) {
             LatLng latLng = getIntent().getParcelableExtra(POSITION_EXTRA);
             StringBuilder positionBuilder = new StringBuilder();
@@ -122,7 +123,6 @@ public class WeatherDetailsActivity extends AppCompatActivity {
     void displayWeatherTimeLine(List<Hour> hourList) {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this,
                 DividerItemDecoration.HORIZONTAL);
-        forecastRecyclerView = findViewById(R.id.forecast_list);
         forecastRecyclerViewAdapter = new ForecastRecyclerViewAdapter();
         forecastRecyclerView.addItemDecoration(dividerItemDecoration);
         forecastRecyclerView.setAdapter(forecastRecyclerViewAdapter);

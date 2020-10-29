@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="edit_text_location">50dp</dimen>
+    <dimen name="primary_text_size">18dp</dimen>
+    <dimen name="active_icon_size">24dp</dimen>
+    <dimen name="size_nav_width">90dp</dimen>
 </resources>

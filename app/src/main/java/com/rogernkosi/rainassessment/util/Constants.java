@@ -7,6 +7,8 @@ public interface Constants {
     int LOCATION_SERVICE_ID = 345;
     String START_LOCATION_SERVICE = "startLocationService";
     String STOP_LOCATION_SERVICE = "stopLocationService";
+    String START_DEVICE_SIGNAL_STRENGTH_SERVICE = "startDeviceSignalService";
+    String STOP_DEVICE_SIGNAL_STRENGTH_SERVICE = "stopDeviceSignalService";
     int NOTIFICATION_INTENT = 3456;
     String LOCATION_NOTIFICATION_TITLE = "Rain";
     CharSequence LOCATION_NOTIFICATION_TEXT = "Current Location being shared";
@@ -15,4 +17,7 @@ public interface Constants {
     long LOCATION_INTERVAL = 10000;
     long FASTEST_LOCATION_INTERVAL = 10000;
     String ACTION_VIEW_CURRENT_LOCATION = "currentLocation";
+    String SIGNAL_INDICATOR_KEY = "RSSI"; // received signal strength indicator
+    String REFERENCE_SIGNAL_RECEIVED = "RSRP"; // Reference signal received power
+    String RECEIVED_SIGNAL_POWER = "RSCP"; // received signal code power
 }
